@@ -3,9 +3,6 @@
  * User: Patrick Schinkel schinkel@schinkelmedia.com
  * Date: 20.01.13
  * Time: 12:46
- */
-
-/**
  * Handles one lazy connection
  */
 class LazyConnectionModel{
@@ -32,8 +29,8 @@ class LazyConnectionModel{
 
     /**
      * Set Callback for connection
-     * @param $openCallback
-     * @param $closeCallback
+     * @param callback $openCallback
+     * @param callback $closeCallback
      */
     function __construct($openCallback, $closeCallback){
         $this->openCallback = $openCallback;
@@ -50,9 +47,9 @@ class LazyConnectionModel{
     }
 
     /**
-     * manualy opens a connection
+     * manually opens a connection
      */
-    public function manualOpen(){
+    public function manuallyOpen(){
         $handler = $this->openCallback();
         if($handler!=0 && $handler!=null){
             $this->connected = true;
@@ -65,9 +62,9 @@ class LazyConnectionModel{
      * if necessary it opens a connection
      * @return mixed|null
      */
-    function getHandler(){
+    public function getHandler(){
         if(!$this->connected){
-            $this->manualOpen();
+            $this->manuallyOpen();
         }
         return $this->handler;
     }
