@@ -5,7 +5,7 @@
  * Time: 12:46
  * Handles one lazy connection
  */
-class LazyConnectionModel{
+class LazyConnection{
     /**
      * tells if a connection is initialised
      * @var bool

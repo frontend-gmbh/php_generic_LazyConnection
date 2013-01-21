@@ -6,9 +6,9 @@
  */
 
 
-class LazyConnectionController{
+class LazyConnector{
     /**
-     * @var LazyConnectionModel[]
+     * @var LazyConnection[]
      */
     private $connections = array();
 
@@ -19,7 +19,7 @@ class LazyConnectionController{
      * @param callback $closeCallback
      */
     public function addConnection($name, $openCallback, $closeCallback){
-        $this->connections[$name] = new LazyConnectionModel($openCallback,$closeCallback);
+        $this->connections[$name] = new LazyConnection($openCallback,$closeCallback);
     }
 
     /**
@@ -31,7 +31,7 @@ class LazyConnectionController{
     }
 
     /**
-     * Manualy closes a connection and destroys the object
+     * Manually closes a connection and destroys the object
      * @param string $name
      */
     public function manuallyCloseConnection($name){
