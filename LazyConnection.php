@@ -26,6 +26,11 @@ class LazyConnection{
      * @var mixed
      */
     private $handler = null;
+    /**
+     * Callbacks to get data
+     * @var callback[]
+     */
+    private $connectionCallbacks = array();
 
     /**
      * Set Callback for connection
@@ -42,7 +47,8 @@ class LazyConnection{
      */
     function __destruct(){
         if($this->connected && $this->closeCallback!=null){
-            $this->closeCallback();
+            $func = $this->closeCallback;
+            $func($this->getHandler());
         }
     }
 
@@ -50,7 +56,8 @@ class LazyConnection{
      * manually opens a connection
      */
     public function manuallyOpen(){
-        $handler = $this->openCallback();
+        $func = $this->openCallback;
+        $handler = $func();
         if($handler!=0 && $handler!=null){
             $this->connected = true;
             $this->handler = $handler;
@@ -67,5 +74,27 @@ class LazyConnection{
             $this->manuallyOpen();
         }
         return $this->handler;
+    }
+
+    /**
+     * adds a new connection function
+     * if necessary it opens a connection
+     * @param string $name
+     * @param callback $callback Callbackfunction function($handler,$key){..}
+     */
+    public function addConnectionfunction($name, $callback){
+        $this->connectionCallbacks[$name] = $callback;
+    }
+
+    /**
+     * Gets data from the connection
+     * uses with addConnectionfunction predefined functions
+     * @param string $name name of the connection function
+     * @param string $key key to get the data sessionkey, query-string etc
+     * @return mixed|null
+     */
+    public function connectionfunction($name,$key){
+        $func = $this->connectionCallbacks[$name];
+        return $func($this->getHandler(),$key);
     }
 }
